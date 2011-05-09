@@ -1,0 +1,6 @@
+[user]
+	email = karouf@gmail.com
+	name = Renaud Martinet
+
+[core]
+  excludesfile = "~/.dotfiles/git_excludes"
