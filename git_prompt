@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ./colors
+source ~/.dotfiles/colors
 
 ### Assign colors to status here
 INIT=$WHITE
