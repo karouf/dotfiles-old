@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+source ./colors
+
+### Assign colors to status here
+INIT=$WHITE
+CLEAN=$GREEN
+DIRTY=$YELLOW
+MODIFIED=$RED
+UNTRACKED=$MAGENTA
+
+function parse_git_status {
+  gs=`git status 2> /dev/null`
+
+  if [ $? -ne 0 ]; then
+    echo -n 'error'
+    return 1
+  fi
+
+  clean=0
+  staged=0
+  modified=0
+  untracked=0
+
+  if [[ "$gs" =~ working\ directory\ clean ]]; then clean=1; echo 'clean' >> $LOG; fi
+  if [ $clean -eq 1 ]; then
+    echo -n 'clean'
+    return 0
+  fi
+
+  if [[ "$gs" =~ Changes\ to\ be\ committed ]]; then staged=1; fi
+  if [[ "$gs" =~ Changed\ but\ not\ updated ]]; then modified=1; fi
+  if [[ "$gs" =~ Untracked\ files ]]; then untracked=1; fi
+  if [ $staged -eq 1 ] && [ $modified -eq 0 ] && [ $untracked -eq 0 ]; then
+    echo -n 'staged'
+    return 0
+  fi
+
+  if [ $modified -eq 1 ] && [ $untracked -eq 0 ]; then
+    echo -n 'modified'
+    return 0
+  fi
+
+  if [ $untracked -eq 1 ] && [ $modified -eq 0 ]; then
+    echo -n 'untracked'
+    return 0
+  fi
+
+  if [ $modified -eq 1 ] || [ $untracked -eq 1 ]; then
+    echo -n 'dirty'
+    return 0
+  fi
+}
+
+function parse_git_branch {
+  echo -n `git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+}
+
+
+function git_prompt {
+  status=$(parse_git_status)
+  if [ $? -ne 0 ]; then
+    echo -n ''
+    return 1
+  fi
+  
+  branch=$(parse_git_branch)
+  if [ "$branch" == "" ]; then
+    echo -n "${INIT}init${NO_COLOR}"
+    return 0
+  fi
+
+  case $status in
+    clean)
+      echo -n "${CLEAN}${branch}${NO_COLOR}"
+      ;;
+    staged)
+      echo -n "${STAGED}${branch}${NO_COLOR}"
+      ;;
+    dirty)
+      echo -n "${DIRTY}${branch}${NO_COLOR}"
+      ;;
+    modified)
+      echo -n "${MODIFIED}${branch}${NO_COLOR}"
+      ;;
+    untracked)
+      echo -n "${UNTRACKED}${branch}${NO_COLOR}"
+      ;;
+    *)
+      echo -n "${NO_COLOR}${branch}${NO_COLOR}"
+      ;;
+  esac
+}

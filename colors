@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Color definitions
+NO_COLOR="\e[m"
+GREEN="\e[0;32m"
+WHITE="\e[1;37m"
+CYAN="\e[0;36m"
+YELLOW="\e[0;33m"
+RED="\e[0;31m"
+MAGENTA="\e[0;35m"
