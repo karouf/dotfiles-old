@@ -10,6 +10,7 @@ MODIFIED=$RED
 UNTRACKED=$MAGENTA
 
 function parse_git_status {
+  local gs
   gs=`git status 2> /dev/null`
 
   if [ $? -ne 0 ]; then
@@ -17,10 +18,10 @@ function parse_git_status {
     return 1
   fi
 
-  clean=0
-  staged=0
-  modified=0
-  untracked=0
+  local clean=0
+  local staged=0
+  local modified=0
+  local untracked=0
 
   if [[ "$gs" =~ working\ directory\ clean ]]; then clean=1; fi
   if [ $clean -eq 1 ]; then
@@ -58,12 +59,14 @@ function parse_git_branch {
 
 
 function git_prompt {
+  local status
   status=$(parse_git_status)
   if [ $? -ne 0 ]; then
     echo -n ''
     return 1
   fi
   
+  local branch
   branch=$(parse_git_branch)
   if [ "$branch" == "" ]; then
     echo -n "${INIT}init${NO_COLOR}"
