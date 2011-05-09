@@ -22,7 +22,7 @@ function parse_git_status {
   modified=0
   untracked=0
 
-  if [[ "$gs" =~ working\ directory\ clean ]]; then clean=1; echo 'clean' >> $LOG; fi
+  if [[ "$gs" =~ working\ directory\ clean ]]; then clean=1; fi
   if [ $clean -eq 1 ]; then
     echo -n 'clean'
     return 0
