@@ -1,0 +1,4 @@
+# Sourcing needed scripts
+source ~/.dotfiles/git_aliases
+source ~/.dotfiles/git_prompt
+source ~/.dotfiles/solarized-term
