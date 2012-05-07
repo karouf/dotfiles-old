@@ -95,3 +95,5 @@ function git_prompt {
       ;;
   esac
 }
+
+export PS1="\u@\h:\w[\`echo -e \$(git_prompt)\`]\$ "
